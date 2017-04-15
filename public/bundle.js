@@ -29572,7 +29572,15 @@ var reducer = function reducer() {
 	}
 };
 
-var store = redux.createStore(reducer);
+var store = redux.createStore(reducer, redux.compose(window.devToolsExtension ? window.devToolsExtension() : function (f) {
+	return f;
+}));
+
+var unsubscribe = store.subscribe(function () {
+	var state = store.getState();
+
+	document.getElementById('app').innerHTML = state.name;
+});
 
 var currentState = store.getState();
 
@@ -29581,6 +29589,11 @@ console.log(currentState);
 store.dispatch({
 	type: 'CHANGE_NAME',
 	name: 'Max'
+});
+
+store.dispatch({
+	type: 'CHANGE_NAME',
+	name: 'Emma'
 });
 
 console.log('should be', store.getState());
