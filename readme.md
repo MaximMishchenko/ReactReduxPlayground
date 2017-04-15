@@ -1,4 +1,2 @@
-React Timer application
+React-Redux playground application
 =====================
-
-[Use it on heroku](http://safe-beyond-99488.herokuapp.com/)
