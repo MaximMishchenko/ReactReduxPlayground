@@ -12953,155 +12953,8 @@ exports.default = NotFound;
 "use strict";
 
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-var redux = __webpack_require__(265);
-var axios = __webpack_require__(281);
-
-var nextHobbyId = 1;
-var nextMovieId = 1;
-
-var nameReducer = function nameReducer() {
-	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Anonymous';
-	var action = arguments[1];
-
-	switch (action.type) {
-		case 'CHANGE_NAME':
-			return action.name;
-		default:
-			return state;
-	}
-};
-
-var changeName = function changeName(name) {
-	return {
-		type: 'CHANGE_NAME',
-		name: name
-	};
-};
-
-var hobbiesReducer = function hobbiesReducer() {
-	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-	var action = arguments[1];
-
-	switch (action.type) {
-		case 'ADD_HOBBIE':
-			return [].concat(_toConsumableArray(state), [{
-				id: nextHobbyId++,
-				hobby: action.hobby
-			}]);
-		case 'REMOVE_HOBBY':
-			return state.filter(function (hobby) {
-				return hobby.id !== action.id;
-			});
-		default:
-			return state;
-	}
-};
-
-var addHobbie = function addHobbie(hobby) {
-	return {
-		type: 'ADD_HOBBIE',
-		hobby: hobby
-	};
-};
-
-var removeHobbie = function removeHobbie(id) {
-	return {
-		type: 'REMOVE_HOBBY',
-		id: id
-	};
-};
-
-var moviesReducer = function moviesReducer() {
-	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-	var action = arguments[1];
-
-	switch (action.type) {
-		case 'ADD_MOVIE':
-			return [].concat(_toConsumableArray(state), [{
-				id: nextMovieId++,
-				title: action.title,
-				genre: action.genre
-			}]);
-		case 'REMOVE_MOVIE':
-			return state.filter(function (movie) {
-				return movie.id !== action.id;
-			});
-		default:
-			return state;
-	}
-};
-
-var addMovie = function addMovie(title, genre) {
-	return {
-		type: 'ADD_MOVIE',
-		title: title,
-		genre: genre
-	};
-};
-
-var removeMovie = function removeMovie(id) {
-	return {
-		type: 'REMOVE_MOVIE',
-		id: id
-	};
-};
-
-var mapReducer = function mapReducer() {
-	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { isFetching: false, url: undefined };
-	var action = arguments[1];
-
-	switch (action.type) {
-		case 'START_LOCATION_FETCH':
-			return {
-				isFetching: true,
-				url: undefined
-			};
-		case 'COMPLETE_LOCATION_FETCH':
-			return {
-				isFetching: false,
-				url: action.url
-			};
-		default:
-			return state;
-	}
-};
-
-var startLocationFetch = function startLocationFetch() {
-	return {
-		type: 'START_LOCATION_FETCH'
-	};
-};
-
-var completeLocationFetch = function completeLocationFetch(url) {
-	return {
-		type: 'COMPLETE_LOCATION_FETCH',
-		url: url
-	};
-};
-
-var fetchLocation = function fetchLocation() {
-	store.dispatch(startLocationFetch());
-
-	axios.get('http://ipinfo.io').then(function (res) {
-		var loc = res.data.loc;
-		var baseUrl = 'http://maps.google.com?q=';
-
-		store.dispatch(completeLocationFetch(baseUrl + loc));
-	});
-};
-
-var reducer = redux.combineReducers({
-	name: nameReducer,
-	hobbies: hobbiesReducer,
-	movies: moviesReducer,
-	map: mapReducer
-});
-
-var store = redux.createStore(reducer, redux.compose(window.devToolsExtension ? window.devToolsExtension() : function (f) {
-	return f;
-}));
+var actions = __webpack_require__(299);
+var store = __webpack_require__(300).configure();
 
 var unsubscribe = store.subscribe(function () {
 	var state = store.getState();
@@ -13119,16 +12972,16 @@ var currentState = store.getState();
 
 console.log(currentState);
 
-fetchLocation();
+store.dispatch(actions.fetchLocation());
 
-store.dispatch(changeName('Max'));
-store.dispatch(addHobbie('Running'));
-store.dispatch(changeName('Emma'));
-store.dispatch(addHobbie('Walking'));
-store.dispatch(removeHobbie(2));
-store.dispatch(addMovie('Mad Max', 'Action'));
-store.dispatch(addMovie('Harry Potter', 'Fantasy'));
-store.dispatch(removeMovie(2));
+store.dispatch(actions.changeName('Max'));
+store.dispatch(actions.addHobbie('Running'));
+store.dispatch(actions.changeName('Emma'));
+store.dispatch(actions.addHobbie('Walking'));
+store.dispatch(actions.removeHobbie(2));
+store.dispatch(actions.addMovie('Mad Max', 'Action'));
+store.dispatch(actions.addMovie('Harry Potter', 'Fantasy'));
+store.dispatch(actions.removeMovie(2));
 
 /***/ }),
 /* 125 */
@@ -31848,6 +31701,241 @@ module.exports = function spread(callback) {
   };
 };
 
+
+/***/ }),
+/* 299 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.fetchLocation = exports.completeLocationFetch = exports.startLocationFetch = exports.removeMovie = exports.addMovie = exports.removeHobbie = exports.addHobbie = exports.changeName = undefined;
+
+var _axios = __webpack_require__(281);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var changeName = exports.changeName = function changeName(name) {
+	return {
+		type: 'CHANGE_NAME',
+		name: name
+	};
+};
+
+var addHobbie = exports.addHobbie = function addHobbie(hobby) {
+	return {
+		type: 'ADD_HOBBIE',
+		hobby: hobby
+	};
+};
+
+var removeHobbie = exports.removeHobbie = function removeHobbie(id) {
+	return {
+		type: 'REMOVE_HOBBY',
+		id: id
+	};
+};
+
+var addMovie = exports.addMovie = function addMovie(title, genre) {
+	return {
+		type: 'ADD_MOVIE',
+		title: title,
+		genre: genre
+	};
+};
+
+var removeMovie = exports.removeMovie = function removeMovie(id) {
+	return {
+		type: 'REMOVE_MOVIE',
+		id: id
+	};
+};
+
+var startLocationFetch = exports.startLocationFetch = function startLocationFetch() {
+	return {
+		type: 'START_LOCATION_FETCH'
+	};
+};
+
+var completeLocationFetch = exports.completeLocationFetch = function completeLocationFetch(url) {
+	return {
+		type: 'COMPLETE_LOCATION_FETCH',
+		url: url
+	};
+};
+
+var fetchLocation = exports.fetchLocation = function fetchLocation() {
+	return function (dispatch, getState) {
+		dispatch(startLocationFetch());
+
+		_axios2.default.get('http://ipinfo.io').then(function (res) {
+			var loc = res.data.loc;
+			var baseUrl = 'http://maps.google.com?q=';
+
+			dispatch(completeLocationFetch(baseUrl + loc));
+		});
+	};
+};
+
+/***/ }),
+/* 300 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.configure = undefined;
+
+var _redux = __webpack_require__(265);
+
+var _reduxThunk = __webpack_require__(302);
+
+var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
+
+var _index = __webpack_require__(301);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var configure = exports.configure = function configure() {
+
+	var reducer = (0, _redux.combineReducers)({
+		name: _index.nameReducer,
+		hobbies: _index.hobbiesReducer,
+		movies: _index.moviesReducer,
+		map: _index.mapReducer
+	});
+
+	var store = (0, _redux.createStore)(reducer, (0, _redux.compose)((0, _redux.applyMiddleware)(_reduxThunk2.default), window.devToolsExtension ? window.devToolsExtension() : function (f) {
+		return f;
+	}));
+
+	return store;
+};
+
+/***/ }),
+/* 301 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var nameReducer = exports.nameReducer = function nameReducer() {
+	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Anonymous';
+	var action = arguments[1];
+
+	switch (action.type) {
+		case 'CHANGE_NAME':
+			return action.name;
+		default:
+			return state;
+	}
+};
+
+var nextHobbyId = 1;
+
+var hobbiesReducer = exports.hobbiesReducer = function hobbiesReducer() {
+	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+	var action = arguments[1];
+
+	switch (action.type) {
+		case 'ADD_HOBBIE':
+			return [].concat(_toConsumableArray(state), [{
+				id: nextHobbyId++,
+				hobby: action.hobby
+			}]);
+		case 'REMOVE_HOBBY':
+			return state.filter(function (hobby) {
+				return hobby.id !== action.id;
+			});
+		default:
+			return state;
+	}
+};
+
+var nextMovieId = 1;
+
+var moviesReducer = exports.moviesReducer = function moviesReducer() {
+	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+	var action = arguments[1];
+
+	switch (action.type) {
+		case 'ADD_MOVIE':
+			return [].concat(_toConsumableArray(state), [{
+				id: nextMovieId++,
+				title: action.title,
+				genre: action.genre
+			}]);
+		case 'REMOVE_MOVIE':
+			return state.filter(function (movie) {
+				return movie.id !== action.id;
+			});
+		default:
+			return state;
+	}
+};
+
+var mapReducer = exports.mapReducer = function mapReducer() {
+	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { isFetching: false, url: undefined };
+	var action = arguments[1];
+
+	switch (action.type) {
+		case 'START_LOCATION_FETCH':
+			return {
+				isFetching: true,
+				url: undefined
+			};
+		case 'COMPLETE_LOCATION_FETCH':
+			return {
+				isFetching: false,
+				url: action.url
+			};
+		default:
+			return state;
+	}
+};
+
+/***/ }),
+/* 302 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+function createThunkMiddleware(extraArgument) {
+  return function (_ref) {
+    var dispatch = _ref.dispatch,
+        getState = _ref.getState;
+    return function (next) {
+      return function (action) {
+        if (typeof action === 'function') {
+          return action(dispatch, getState, extraArgument);
+        }
+
+        return next(action);
+      };
+    };
+  };
+}
+
+var thunk = createThunkMiddleware();
+thunk.withExtraArgument = createThunkMiddleware;
+
+exports['default'] = thunk;
 
 /***/ })
 /******/ ]);
