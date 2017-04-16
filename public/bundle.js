@@ -12953,63 +12953,12 @@ exports.default = NotFound;
 "use strict";
 
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 var redux = __webpack_require__(265);
 
-var stateDefault = {
-	name: 'Anonymous',
-	hobbies: [],
-	movies: []
-};
-
 var nextHobbyId = 1;
 var nextMovieId = 1;
-
-var oldReducer = function oldReducer() {
-	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : stateDefault;
-	var action = arguments[1];
-
-	console.log('new action', action);
-
-	switch (action.type) {
-		case 'CHANGE_NAME':
-			return _extends({}, state, {
-				name: action.name
-			});
-		case 'REMOVE_HOBBY':
-			return _extends({}, state, {
-				hobbies: state.hobbies.filter(function (hobby) {
-					return hobby.id !== action.id;
-				})
-			});
-		case 'REMOVE_MOVIE':
-			return _extends({}, state, {
-				movies: state.movies.filter(function (movie) {
-					return movie.id !== action.id;
-				})
-			});
-		case 'ADD_HOBBIE':
-			return _extends({}, state, {
-				hobbies: [].concat(_toConsumableArray(state.hobbies), [{
-					id: nextHobbyId++,
-					hobby: action.hobby
-				}])
-			});
-		case 'ADD_MOVIE':
-			return _extends({}, state, {
-				movies: [].concat(_toConsumableArray(state.movies), [{
-					id: nextMovieId++,
-					title: action.title,
-					genre: action.genre
-				}])
-			});
-		default:
-			return state;
-	}
-};
 
 var nameReducer = function nameReducer() {
 	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Anonymous';
@@ -13021,6 +12970,13 @@ var nameReducer = function nameReducer() {
 		default:
 			return state;
 	}
+};
+
+var changeName = function changeName(name) {
+	return {
+		type: 'CHANGE_NAME',
+		name: name
+	};
 };
 
 var hobbiesReducer = function hobbiesReducer() {
@@ -13042,6 +12998,20 @@ var hobbiesReducer = function hobbiesReducer() {
 	}
 };
 
+var addHobbie = function addHobbie(hobby) {
+	return {
+		type: 'ADD_HOBBIE',
+		hobby: hobby
+	};
+};
+
+var removeHobbie = function removeHobbie(id) {
+	return {
+		type: 'REMOVE_HOBBY',
+		id: id
+	};
+};
+
 var moviesReducer = function moviesReducer() {
 	var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 	var action = arguments[1];
@@ -13060,6 +13030,21 @@ var moviesReducer = function moviesReducer() {
 		default:
 			return state;
 	}
+};
+
+var addMovie = function addMovie(title, genre) {
+	return {
+		type: 'ADD_MOVIE',
+		title: title,
+		genre: genre
+	};
+};
+
+var removeMovie = function removeMovie(id) {
+	return {
+		type: 'REMOVE_MOVIE',
+		id: id
+	};
 };
 
 var reducer = redux.combineReducers({
@@ -13084,49 +13069,14 @@ var currentState = store.getState();
 
 console.log(currentState);
 
-store.dispatch({
-	type: 'CHANGE_NAME',
-	name: 'Max'
-});
-
-store.dispatch({
-	type: 'ADD_HOBBIE',
-	hobby: 'Running'
-});
-
-store.dispatch({
-	type: 'CHANGE_NAME',
-	name: 'Emma'
-});
-
-store.dispatch({
-	type: 'ADD_HOBBIE',
-	hobby: 'Walking'
-});
-
-store.dispatch({
-	type: 'REMOVE_HOBBY',
-	id: 2
-});
-
-store.dispatch({
-	type: 'ADD_MOVIE',
-	title: 'Mad Max',
-	genre: 'Action'
-});
-
-store.dispatch({
-	type: 'ADD_MOVIE',
-	title: 'Harry Potter',
-	genre: 'Fantasy'
-});
-
-store.dispatch({
-	type: 'REMOVE_MOVIE',
-	id: 2
-});
-
-console.log('should be', store.getState());
+store.dispatch(changeName('Max'));
+store.dispatch(addHobbie('Running'));
+store.dispatch(changeName('Emma'));
+store.dispatch(addHobbie('Walking'));
+store.dispatch(removeHobbie(2));
+store.dispatch(addMovie('Mad Max', 'Action'));
+store.dispatch(addMovie('Harry Potter', 'Fantasy'));
+store.dispatch(removeMovie(2));
 
 /***/ }),
 /* 125 */

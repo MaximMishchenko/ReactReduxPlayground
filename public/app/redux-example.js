@@ -1,60 +1,7 @@
 const redux =  require('redux')
 
-let stateDefault = {
-	name: 'Anonymous',
-	hobbies: [],
-	movies: []
-}
-
 let nextHobbyId = 1
 let nextMovieId = 1
-
-let oldReducer = (state = stateDefault, action) => {
-	console.log('new action', action)
-
-	switch (action.type) {
-		case 'CHANGE_NAME':
-			return {
-				...state,
-				name: action.name
-			}
-		case 'REMOVE_HOBBY':
-			return {
-				...state,
-				hobbies: state.hobbies.filter((hobby) => hobby.id !== action.id)
-			}
-		case 'REMOVE_MOVIE':
-			return {
-				...state,
-				movies: state.movies.filter((movie) => movie.id !== action.id)
-			}
-		case 'ADD_HOBBIE':
-			return {
-				...state,
-				hobbies: [
-					...state.hobbies,
-					{
-						id: nextHobbyId++,
-						hobby: action.hobby
-					}
-				]
-			}
-		case 'ADD_MOVIE':
-			return {
-				...state,
-				movies: [
-					...state.movies,
-					{
-						id: nextMovieId++,
-						title: action.title,
-						genre: action.genre
-					}
-				]
-			}
-		default:
-			return state
-	}
-}
 
 let nameReducer = (state =  'Anonymous', action) => {
 	switch (action.type) {
@@ -62,6 +9,13 @@ let nameReducer = (state =  'Anonymous', action) => {
 			return action.name
 		default:
 			return state
+	}
+}
+
+let changeName = (name) => {
+	return {
+		type: 'CHANGE_NAME',
+		name
 	}
 }
 
@@ -82,6 +36,20 @@ let hobbiesReducer = (state = [], action) => {
 	}
 }
 
+let addHobbie = (hobby) => {
+	return {
+		type: 'ADD_HOBBIE',
+		hobby
+	}
+}
+
+let removeHobbie = (id) => {
+	return {
+		type: 'REMOVE_HOBBY',
+		id
+	}
+}
+
 let moviesReducer = (state = [], action) => {
 	switch(action.type){
 		case 'ADD_MOVIE':
@@ -97,6 +65,21 @@ let moviesReducer = (state = [], action) => {
 			return state.filter((movie) => movie.id !== action.id)
 		default:
 			return state
+	}
+}
+
+let addMovie = (title, genre) => {
+	return {
+		type: 'ADD_MOVIE',
+		title,
+		genre
+	}
+}
+
+let removeMovie = (id) => {
+	return {
+		type: 'REMOVE_MOVIE',
+		id
 	}
 }
 
@@ -122,46 +105,11 @@ let currentState = store.getState()
 
 console.log(currentState)
 
-store.dispatch({
-	type: 'CHANGE_NAME',
-	name: 'Max'
-})
-
-store.dispatch({
-	type: 'ADD_HOBBIE',
-	hobby: 'Running'
-})
-
-store.dispatch({
-	type: 'CHANGE_NAME',
-	name: 'Emma'
-})
-
-store.dispatch({
-	type: 'ADD_HOBBIE',
-	hobby: 'Walking'
-})
-
-store.dispatch({
-	type: 'REMOVE_HOBBY',
-	id: 2
-})
-
-store.dispatch({
-	type: 'ADD_MOVIE',
-	title: 'Mad Max',
-	genre: 'Action'
-})
-
-store.dispatch({
-	type: 'ADD_MOVIE',
-	title: 'Harry Potter',
-	genre: 'Fantasy'
-})
-
-store.dispatch({
-	type: 'REMOVE_MOVIE',
-	id: 2
-})
-
-console.log('should be', store.getState())
+store.dispatch(changeName('Max'))
+store.dispatch(addHobbie('Running'))
+store.dispatch(changeName('Emma'))
+store.dispatch(addHobbie('Walking'))
+store.dispatch(removeHobbie(2))
+store.dispatch(addMovie('Mad Max', 'Action'))
+store.dispatch(addMovie('Harry Potter', 'Fantasy'))
+store.dispatch(removeMovie(2))
